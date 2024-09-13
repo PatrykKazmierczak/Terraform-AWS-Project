@@ -68,12 +68,11 @@ resource "aws_lambda_function" "lambda_function" {
   role = aws_iam_role.role.arn
   handler = "main.handler"
   source_code_hash = data.archive_file.lambda_package.output_base64sha256
-
   runtime = "python3.8"
 
   environment {
     variables = {
-      "key" = aws_dynamodb_table.table.name
+      TABLE_NAME = aws_dynamodb_table.table.name
     }
   }
 }
