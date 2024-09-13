@@ -10,8 +10,7 @@ data "aws_iam_policy_document" "policy" {
     sid    = "ReadWriteDynamoDB"  # Statement ID for identification
     effect = "Allow"              # Allow the specified actions
     actions = [
-      "dynamodb:ScanItem",        # Allow read operations on DynamoDB
-      "dynamodb:PutItem",         # Allow write operations on DynamoDB
+      "dynamodb:Scan",        # Allow read operations on DynamoDB         
       "dynamodb:GetItem"         # Allow write operations on DynamoDB
     ]
     resources = [
