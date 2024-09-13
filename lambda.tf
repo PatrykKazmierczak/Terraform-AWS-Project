@@ -67,6 +67,7 @@ resource "aws_lambda_function" "lambda_function" {
   function_name = "backend_videopoint"
   role = aws_iam_role.role.arn
   handler = "main.handler"
+  source_code_hash = data.archive_file.lambda_package.output_base64sha256
 
   runtime = "python3.8"
 
