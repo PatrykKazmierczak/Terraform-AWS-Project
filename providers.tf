@@ -8,6 +8,10 @@ terraform {
       source  = "hashicorp/aws"  # Provider source from HashiCorp
       version = "5.66.0"         # Exact version of the AWS provider required
     }
+    archive = {
+      source = "hashicorp/archive"
+      version = "2.6.0"
+    }
   }
 
   # Configure the backend to store the Terraform state file
@@ -22,5 +26,9 @@ terraform {
 # Configure the AWS provider
 provider "aws" {
   region = "eu-north-1"  # AWS region where resources will be created
+}
+
+provider "archive" {
+  # Configuration options
 }
 
