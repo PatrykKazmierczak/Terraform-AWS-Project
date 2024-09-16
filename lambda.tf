@@ -76,3 +76,12 @@ resource "aws_lambda_function" "lambda_function" {
   }
 }
 
+resource "aws_lambda_permission" "resource_based_policy" {
+  statement_id  = "HTTPApiInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.lambda_function.function_name  # Correct reference
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_apigatewayv2_api.api.execution_arn}/*"
+}
+
+
