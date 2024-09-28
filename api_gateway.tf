@@ -1,5 +1,5 @@
 resource "aws_apigatewayv2_api" "api" {
-    name          = "backend"
+    name          = var.api_gateway_name
     protocol_type = "HTTP" 
 }
 
