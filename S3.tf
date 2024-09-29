@@ -1,6 +1,6 @@
 # Create an S3 bucket named "fronted-videopoint"
 resource "aws_s3_bucket" "bucket" {
-  bucket = "fronted-videopoint"  # Name of the S3 bucket
+  bucket = var.s3_bucket_name  # Name of the S3 bucket
 }
 
 # Define public access block configuration for the S3 bucket
@@ -8,10 +8,10 @@ resource "aws_s3_bucket_public_access_block" "public_access_block" {
   bucket = aws_s3_bucket.bucket.id  # Reference to the S3 bucket created above
 
   # Block public access to the bucket
-  block_public_acls       = true  # Prevents setting ACLs that allow public access
-  block_public_policy     = false # Allows the bucket policy to be set
-  ignore_public_acls      = true  # Ignores any public ACLs on the bucket
-  restrict_public_buckets = false # Allows the bucket to be public
+  block_public_acls       = var.s3_public_access_block.block_public_acls
+  block_public_policy     = var.s3_public_access_block.block_public_policy
+  ignore_public_acls      = var.s3_public_access_block.ignore_public_acls
+  restrict_public_buckets = var.s3_public_access_block.restrict_public_buckets
 }
 
 # Create an IAM policy document that allows public read access to the S3 bucket

@@ -101,3 +101,21 @@ variable "s3_bucket_name" {
   nullable = false
   
 }
+
+variable "s3_public_access_block" {
+  type = object({
+    block_public_acls       = bool
+    block_public_policy     = bool
+    ignore_public_acls      = bool
+    restrict_public_buckets = bool
+  })
+  description = "Blok publicznego dostepu S3"
+  nullable = false
+  default = {
+    block_public_acls = true
+    block_public_policy = false
+    ignore_public_acls = true
+    restrict_public_buckets = false 
+  }
+  
+}
