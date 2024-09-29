@@ -3,9 +3,17 @@ resource "aws_s3_bucket" "bucket" {
   bucket = var.s3_bucket_name  # Name of the S3 bucket
 }
 
+resource "aws_s3_bucket" "petle" {
+  for_each = {
+    petle = "videopoint"
+    funkcje = "helion"
+  }
+  bucket = "${each.key}-${each.value}"
+}
+
 # Define public access block configuration for the S3 bucket
-resource "aws_s3_bucket_public_access_block" "public_access_block" {
-  bucket = aws_s3_bucket.bucket.id  # Reference to the S3 bucket created above
+resource "aws_s3_bucket_public_access_block" "petle" {
+  bucket = aws_s3_bucket.petle["petle"].id  # Reference to the S3 bucket created above
 
   # Block public access to the bucket
   block_public_acls       = var.s3_public_access_block.block_public_acls
