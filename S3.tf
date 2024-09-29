@@ -3,13 +3,13 @@ resource "aws_s3_bucket" "bucket" {
   bucket = var.s3_bucket_name  # Name of the S3 bucket
 }
 
-resource "aws_s3_bucket" "petle" {
-  for_each = {
-    petle = "videopoint"
-    funkcje = "helion"
-  }
-  bucket = "${each.key}-${each.value}"
-}
+# resource "aws_s3_bucket" "petle" {
+#   for_each = {
+#     petle = "videopoint"
+#     funkcje = "helion"
+#   }
+#   bucket = "${each.key}-${each.value}"
+# }
 
 # Define public access block configuration for the S3 bucket
 resource "aws_s3_bucket_public_access_block" "petle" {
@@ -40,4 +40,11 @@ data "aws_iam_policy_document" "bucket_policy" {
 resource "aws_s3_bucket_policy" "bucket_policy" {
   bucket = aws_s3_bucket.bucket.id  # Reference to the S3 bucket created above
   policy = data.aws_iam_policy_document.bucket_policy.json  # JSON representation of the IAM policy document
+}
+
+resource "aws_s3_bucket_object" "bucket_object" {
+    bucket = aws_s3_bucket.bucket.id
+    key = "index.html"
+    source = "../frontend/build/index.html"
+  
 }
