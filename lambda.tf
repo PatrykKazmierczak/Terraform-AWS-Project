@@ -1,6 +1,6 @@
 # Define an IAM policy with permissions for Lambda functions
 resource "aws_iam_policy" "policy" {
-  name   = "backend-videopoint-lambda-policy"  # Name of the IAM policy
+  name   = var.lambda_policy  # Name of the IAM policy
   policy = data.aws_iam_policy_document.policy.json  # JSON policy document that defines the permissions
 }
 
@@ -45,7 +45,7 @@ data "aws_iam_policy_document" "assume_role_policy" {
 
 # Define an IAM role for Lambda with the specified assume role policy
 resource "aws_iam_role" "role" {
-  name                 = "backend-videopoint-lambda-role"  # Name of the IAM role
+  name                 = var.lambda_role  # Name of the IAM role
   assume_role_policy   = data.aws_iam_policy_document.assume_role_policy.json  # JSON policy document for assuming the role
 }
 
@@ -57,15 +57,15 @@ resource "aws_iam_role_policy_attachment" "policy_attachment" {
 
 data "archive_file" "lambda_package" {
   type        = "zip"               # Type of archive to create
-  output_path = "./backend.zip"     # Path to save the ZIP file
-  source_dir  = "../backend"         # Directory containing files to include in the ZIP file
+  output_path = "./${var.lambda_source_file_name}.zip"     # Path to save the ZIP file
+  source_dir  = var.lambda_source_dir         # Directory containing files to include in the ZIP file
 }
 
 resource "aws_lambda_function" "lambda_function" {
-  filename = "./backend.zip"
-  function_name = "backend_videopoint"
+  filename = "./${var.lambda_source_file_name}.zip"
+  function_name = var.lambda_function_name
   role = aws_iam_role.role.arn
-  handler = "main.handler"
+  handler = var.lambda_handler
   source_code_hash = data.archive_file.lambda_package.output_base64sha256
   runtime = "python3.8"
 
