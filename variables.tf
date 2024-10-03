@@ -119,3 +119,7 @@ variable "s3_public_access_block" {
   }
 
 }
+
+variable "aplikacja" {
+  type = string
+}

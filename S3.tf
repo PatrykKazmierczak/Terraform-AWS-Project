@@ -49,7 +49,7 @@ resource "aws_s3_bucket_website_configuration" "website" {
   bucket = aws_s3_bucket.bucket.id
 
   index_document {
-    suffix = "index.html"
+    suffix = var.aplikacja == "klient" ? "index.html" : "index2.html"
   }
 
 }
