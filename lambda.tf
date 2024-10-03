@@ -1,20 +1,28 @@
 # Define an IAM policy with permissions for Lambda functions
-resource "aws_iam_policy" "policy" {
-  name   = var.lambda_policy                        # Name of the IAM policy
-  policy = data.aws_iam_policy_document.policy.json # JSON policy document that defines the permissions
-}
+# resource "aws_iam_policy" "policy" {
+#   name   = var.lambda_policy                        # Name of the IAM policy
+#   policy = data.aws_iam_policy_document.policy.json # JSON policy document that defines the permissions
+# }
 
-# Create an IAM policy document defining permissions for DynamoDB and CloudWatch Logs
-data "aws_iam_policy_document" "policy" {
-  dynamic "statement" {
-    for_each = local.lambda_policy
-  content {
-    sid    = statement.key # Statement ID for identification
-    effect = statement.value.effect             # Allow the specified actions
-    actions = statement.value.actions
-    resources = statement.value.resources
-    }
-  }
+# # Create an IAM policy document defining permissions for DynamoDB and CloudWatch Logs
+# data "aws_iam_policy_document" "policy" {
+#   dynamic "statement" {
+#     for_each = local.lambda_policy
+#   content {
+#     sid    = statement.key # Statement ID for identification
+#     effect = statement.value.effect             # Allow the specified actions
+#     actions = statement.value.actions
+#     resources = statement.value.resources
+#     }
+#   }
+# }
+
+module "lambda_policy" {
+  source = "./modules/iam_policy"
+
+  name = var.lambda_policy
+  statements = local.lambda_policy
+  
 }
 # Create an IAM policy document that allows Lambda to assume this role
 data "aws_iam_policy_document" "assume_role_policy" {
@@ -36,10 +44,10 @@ resource "aws_iam_role" "role" {
 }
 
 # Attach the IAM policy to the IAM role
-resource "aws_iam_role_policy_attachment" "policy_attachment" {
-  role       = aws_iam_role.role.name    # Reference to the IAM role
-  policy_arn = aws_iam_policy.policy.arn # ARN of the IAM policy to be attached
-}
+# resource "aws_iam_role_policy_attachment" "policy_attachment" {
+#   role       = aws_iam_role.role.name    # Reference to the IAM role
+#   policy_arn = aws_iam_policy.policy.arn # ARN of the IAM policy to be attached
+# }
 
 data "archive_file" "lambda_package" {
   type        = "zip"                                  # Type of archive to create
