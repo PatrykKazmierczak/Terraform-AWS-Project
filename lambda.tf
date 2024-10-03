@@ -1,21 +1,4 @@
-# Define an IAM policy with permissions for Lambda functions
-# resource "aws_iam_policy" "policy" {
-#   name   = var.lambda_policy                        # Name of the IAM policy
-#   policy = data.aws_iam_policy_document.policy.json # JSON policy document that defines the permissions
-# }
 
-# # Create an IAM policy document defining permissions for DynamoDB and CloudWatch Logs
-# data "aws_iam_policy_document" "policy" {
-#   dynamic "statement" {
-#     for_each = local.lambda_policy
-#   content {
-#     sid    = statement.key # Statement ID for identification
-#     effect = statement.value.effect             # Allow the specified actions
-#     actions = statement.value.actions
-#     resources = statement.value.resources
-#     }
-#   }
-# }
 
 module "lambda_policy" {
   source = "./modules/iam_policy"
@@ -43,11 +26,11 @@ resource "aws_iam_role" "role" {
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json # JSON policy document for assuming the role
 }
 
-# Attach the IAM policy to the IAM role
-# resource "aws_iam_role_policy_attachment" "policy_attachment" {
-#   role       = aws_iam_role.role.name    # Reference to the IAM role
-#   policy_arn = aws_iam_policy.policy.arn # ARN of the IAM policy to be attached
-# }
+#Attach the IAM policy to the IAM role
+resource "aws_iam_role_policy_attachment" "policy_attachment" {
+  role       = aws_iam_role.role.name    # Reference to the IAM role
+  policy_arn = module.lambda_policy.policy_arn
+}
 
 data "archive_file" "lambda_package" {
   type        = "zip"                                  # Type of archive to create
