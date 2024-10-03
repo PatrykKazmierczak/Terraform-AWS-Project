@@ -7,32 +7,15 @@ resource "aws_iam_policy" "policy" {
 # Create an IAM policy document defining permissions for DynamoDB and CloudWatch Logs
 data "aws_iam_policy_document" "policy" {
   dynamic "statement" {
-
-  }
+    for_each = local.lambda_policy
   content {
-    sid    = "ReadWriteDynamoDB" # Statement ID for identification
-    effect = "Allow"             # Allow the specified actions
-    actions = [
-      "dynamodb:Scan",   # Allow read operations on DynamoDB         
-      "dynamodb:GetItem" # Allow write operations on DynamoDB
-    ]
-    resources = [
-      aws_dynamodb_table.table.arn # Reference to the DynamoDB table for which these actions are allowed
-    ]
-  }
-
-  statement {
-    sid    = "AllowLogging" # Statement ID for identification
-    effect = "Allow"        # Allow the specified actions
-    actions = [
-      "logs:CreateLogGroup",  # Allow creating new CloudWatch log groups
-      "logs:CreateLogStream", # Allow creating new log streams in CloudWatch
-      "logs:PutLogEvents"     # Allow putting log events to CloudWatch
-    ]
-    resources = ["*"] # Allow these actions on any CloudWatch log group (consider scoping this down for security)
+    sid    = statement.key # Statement ID for identification
+    effect = statement.value.effect             # Allow the specified actions
+    actions = statement.value.actions
+    resources = statement.value.resources
+    }
   }
 }
-
 # Create an IAM policy document that allows Lambda to assume this role
 data "aws_iam_policy_document" "assume_role_policy" {
   statement {
