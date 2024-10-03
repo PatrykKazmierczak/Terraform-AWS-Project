@@ -1,6 +1,6 @@
 # Specify the minimum version of Terraform required for this configuration
 terraform {
-  required_version = "1.9.5" # Terraform version 1.9.5 or higher is required
+  required_version = "~>1.9.5" # Terraform version 1.9.5 or higher is required
 
   # Define the required providers and their versions
   required_providers {
